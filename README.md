@@ -1,26 +1,28 @@
-# 🚀 CI/CD Pipeline on GCP with Cloud Build and GKE
+# 🚀 CI/CD Pipeline on GCP using GitHub, Cloud Build, and GKE
 
-This project demonstrates a complete CI/CD pipeline on **Google Cloud Platform (GCP)** to build, containerize, and deploy a simple Python Flask web application to a **GKE (Google Kubernetes Engine)** cluster using **Cloud Build**, **Artifact Registry**, and **Kubernetes**.
+This project demonstrates a fully automated CI/CD pipeline using **Google Cloud Platform (GCP)** and **GitHub**, designed to build, test, containerize, and deploy a Python Flask web application to **Google Kubernetes Engine (GKE)** using **Cloud Build**, **Artifact Registry**, and Kubernetes.
 
 ---
 
 ## 🧰 Tech Stack
 
-- **Language**: Python 3.9 (Flask)
-- **CI/CD**: Google Cloud Build
-- **Container Registry**: Artifact Registry (`asia-south1`)
+- **Programming Language**: Python 3.9 (Flask)
+- **Source Control**: GitHub
+- **CI/CD**: Google Cloud Build (triggered by GitHub commits)
 - **Containerization**: Docker
-- **Orchestration**: Kubernetes (GKE Autopilot)
-- **Region**: `asia-south1` (India)
-- **Deployment**: `kubectl`, `gcloud`
+- **Artifact Storage**: Artifact Registry (`asia-south1`)
+- **Deployment**: Kubernetes on GKE (Autopilot)
+- **Region**: `asia-south1` (to comply with Org Policy)
 
 ---
 
 ## 🌐 Architecture Overview
 
-```text
-Git/Cloud Shell → Cloud Build → Artifact Registry → GKE → External IP
-        |               |             |
-    Source Code     Build Image   Store Image
-                                |
-                         Kubernetes Deployment
+```plaintext
+GitHub Repo ──► Cloud Build Trigger ──► Docker Build ──► Artifact Registry
+                                         │
+                                         ▼
+                                    Kubernetes Deployment (GKE)
+                                         │
+                                         ▼
+                                  LoadBalancer Service + App
