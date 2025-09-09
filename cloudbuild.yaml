@@ -1,11 +1,24 @@
 steps:
+  # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA', '.'
-    ]
+    args:
+      [ 'build', '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA', '.' ]
+
+  # Step 2: Push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'push', 'us-central1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA'
-    ]
+    args:
+      [ 'push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA' ]
+
+  # Step 3: Deploy to GKE using kubectl
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=asia-south1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=flask-cluster'
+    args:
+      [
+        'set', 'image', 'deployment/flask-app',
+        'flask-app=asia-south1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA'
+      ]
+
 images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA'
+  - 'asia-south1-docker.pkg.dev/$PROJECT_ID/flask-repo/flask-app:$SHORT_SHA'
